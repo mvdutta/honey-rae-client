@@ -97,3 +97,7 @@
     font-size: 1rem;
     color: crimson;
 }
+
+.search__field {
+    margin-top: 20px;
+}

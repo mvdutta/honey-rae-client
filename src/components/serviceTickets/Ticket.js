@@ -78,11 +78,21 @@ export const Ticket = () => {
             return <div className="ticket__employee">Assigned to {ticket?.employee?.full_name ?? "no one"}</div>
         }
     }
+    const getTodaysDate = () =>{//gets todays date and converts it to the form yyyy-mm-dd using toLocaleString()
+      let date = new Date();
+      // Get year, month, and day part from the date
+      let year = date.toLocaleString("default", { year: "numeric" });
+      let month = date.toLocaleString("default", { month: "2-digit" });
+      let day = date.toLocaleString("default", { day: "2-digit" });
+      // put them into an array and join them by dashes
+      return [year, month, day].join("-");
+    }
+
     const handleMarkDone = (evt) => {
-        let currentDate = new Date()
-        currentDate = currentDate.toISOString().split('T')[0]
+        const currentDate = getTodaysDate()
             const updatedTicket = {
                 ...ticket,
+                // updating 2 properties on the ticket: employee and date_completed
                 employee: parseInt(ticket.employee.id),
                 date_completed: currentDate
             };
@@ -107,6 +117,7 @@ export const Ticket = () => {
               {ticket.date_completed === null
                 ? employeePicker(ticket)
                 : `Completed by ${ticket.employee?.full_name} on ${ticket.date_completed}`}
+                {/* needed to change employee name to full_name to update the employee*/}
             </div>
             <div className="footerItem">{ticketStatus()}</div>
             {isStaff() ? "" : <button onClick={deleteTicket}>Delete</button>}
