@@ -78,33 +78,41 @@ export const Ticket = () => {
             return <div className="ticket__employee">Assigned to {ticket?.employee?.full_name ?? "no one"}</div>
         }
     }
+    const handleMarkDone = (evt) => {
+        let currentDate = new Date()
+        currentDate = currentDate.toISOString().split('T')[0]
+            const updatedTicket = {
+                ...ticket,
+                employee: parseInt(ticket.employee.id),
+                date_completed: currentDate
+            };
+            fetchIt(`http://localhost:8000/tickets/${ticketId}`, {
+                method: "PUT",
+                body: JSON.stringify(updatedTicket),
+            }).then(fetchTicket);
+
+    }
 
     return (
-        <>
-            <section className="ticket">
-                <h3 className="ticket__description">Description</h3>
-                <div>{ticket.description}</div>
+      <>
+        <section className="ticket">
+          <h3 className="ticket__description">Description</h3>
+          <div>{ticket.description}</div>
 
-                <footer className="ticket__footer ticket__footer--detail">
-                    <div className=" footerItem">Submitted by {ticket.customer?.full_name}</div>
-                    <div className="ticket__employee footerItem">
-                        {
-                            ticket.date_completed === null
-                                ? employeePicker(ticket)
-                                : `Completed by ${ticket.employee?.name} on ${ticket.date_completed}`
-                        }
-                    </div>
-                    <div className="footerItem">
-                        { ticketStatus() }
-                    </div>
-                    {
-                        isStaff()
-                            ? ""
-                            : <button onClick={deleteTicket}>Delete</button>
-                    }
-                </footer>
-
-            </section>
-        </>
-    )
+          <footer className="ticket__footer ticket__footer--detail">
+            <div className=" footerItem">
+              Submitted by {ticket.customer?.full_name}
+            </div>
+            <div className="ticket__employee footerItem">
+              {ticket.date_completed === null
+                ? employeePicker(ticket)
+                : `Completed by ${ticket.employee?.full_name} on ${ticket.date_completed}`}
+            </div>
+            <div className="footerItem">{ticketStatus()}</div>
+            {isStaff() ? "" : <button onClick={deleteTicket}>Delete</button>}
+            {isStaff() ? <button onClick={handleMarkDone}>Mark Done</button>: ""}
+          </footer>
+        </section>
+      </>
+    );
 }
