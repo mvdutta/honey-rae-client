@@ -57,6 +57,13 @@ export const TicketList = () => {
       .catch(() => setOriginal([]));
   };
 
+  const handleSearchByKeyword = (evt) => {
+        fetchIt(`http://localhost:8000/tickets?search=${evt.target.value}`)
+          .then((tickets) => {
+            setOriginal(tickets);
+          })
+          .catch(() => setOriginal([]));
+  }
  
   return (
     <>
@@ -73,8 +80,9 @@ export const TicketList = () => {
       <div className="search__field">
         {isStaff() ? (
           <label>
-            Search Tickets by Customer Name:
-            <input type="text"/>
+            Search Tickets by Keyword:
+            <input type="text" onChange={handleSearchByKeyword}
+            />
           </label>
         ) : (
           ""
